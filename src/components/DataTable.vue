@@ -7,28 +7,35 @@
       @click:row="callDialog"
       class="elevation-1"
     ></v-data-table>
-    <VDialogTest v-model="dialog" />
+    <ModalDialog v-model="groupData" />
   </div>
 </template>
 <script>
 import objArr from "@/utils/util";
-import VDialogTest from "@/components/VDialog.vue";
+import ModalDialog from "@/components/ModalDialog.vue";
 
 export default {
   components: {
-    VDialogTest,
+    ModalDialog,
   },
   name: "App",
   data: () => ({
-    dialog: true,
+    dialog: false,
     groups: objArr.groups,
     headers: objArr.headers,
+    groupData: {},
   }),
   methods: {
-    callDialog(item, ctx) {
-      this.dialog = true
-      console.log(item);
-      console.log(ctx);
+    callDialog(event, idx) {
+      this.dialog = !this.dialog;
+      this.groupData = {
+        value: this.dialog,
+        item: {
+          name: idx.item.name,
+          lastName: idx.item.lastName,
+          group: idx.item.groupName,
+        },
+      };
     },
   },
 };
