@@ -7,11 +7,11 @@
       @click:row="callDialog"
       class="elevation-1"
     ></v-data-table>
-    <ModalDialog v-model="groupData" />
+    <ModalDialog v-model="dialog" :group="groupData" @onSave="Save" />
   </div>
 </template>
 <script>
-import objArr from "@/utils/util";
+import { groups, headers } from "@/utils/util";
 import ModalDialog from "@/components/ModalDialog.vue";
 
 export default {
@@ -21,21 +21,19 @@ export default {
   name: "App",
   data: () => ({
     dialog: false,
-    groups: objArr.groups,
-    headers: objArr.headers,
+    groups: groups,
+    headers: headers,
     groupData: {},
+    indexInObj: null,
   }),
   methods: {
-    callDialog(event, idx) {
+    callDialog(event, { item, index }) {
+      this.groupData = item;
+      this.indexInObj = index;
       this.dialog = !this.dialog;
-      this.groupData = {
-        value: this.dialog,
-        item: {
-          name: idx.item.name,
-          lastName: idx.item.lastName,
-          group: idx.item.groupName,
-        },
-      };
+    },
+    Save(fields) {
+      this.groups[this.indexInObj] = Object.assign(this.groupData, fields);
     },
   },
 };

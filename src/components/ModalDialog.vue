@@ -6,34 +6,41 @@
       </v-card-title>
       <v-card-text>
         <v-container>
-          <v-row>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field label="Group name*" required></v-text-field>
-            </v-col>
+          <v-row>          
             <v-col cols="12" sm="6" md="4">
               <v-text-field
+                v-model="fields.name"
                 label="Name"
-                hint="example of helper text only on focus">ffsfs
-               </v-text-field>
+                hint="example of helper text only on focus"
+              >
+              </v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
               <v-text-field
-                label="Lastname*"
-                hint="example of persistent helper text"
+                v-model="fields.lastName"
+                label="Lastname"
                 persistent-hint
                 required
-              >fgghgf444</v-text-field>
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field
+                label="Group name"
+                required
+                v-model="fields.groupName"
+              ></v-text-field>
             </v-col>
           </v-row>
         </v-container>
-        <small>*indicates required field</small>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="dialog = false">
+        <v-btn color="blue darken-1" text @click="ChangeDialogActivator">
           Close
         </v-btn>
-        <v-btn color="blue darken-1" text @click="dialog = false"> Save </v-btn>
+        <v-btn color="blue darken-1" text @click="Save">
+          Save
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -41,28 +48,47 @@
 <script>
 
 export default {
-  
   props: {
     value: {
-      activator: Boolean,
-      item: {
-        name: String,
-        lastName: String,
-        groupName: String,
-      },
+      type: Boolean,
+      default: () => false,
+    },
+    group: {
+      type: Object,
+      default: () => null,
     },
   },
   data: () => ({
     dialog: false,
+    fields: {},
   }),
   watch: {
     value: {
       immediate: true,
       handler() {
-        console.log(this.value.item.name + " :console");
         this.dialog = this.value;
       },
     },
+    group() {
+      if (this.group) {
+        this.fields = { ...this.group };
+      }
+    },
+    dialog() {
+      this.$emit("input", this.dialog); //передаём значение в родительский компонент
+    },
+  },
+  methods: {
+    ChangeDialogActivator() {
+      this.dialog = false;
+    },
+    CheckWhatInValue(evn) {
+      console.log(evn);
+    },
+    Save(){
+      this.$emit('onSave', {...this.fields})
+      this.$emit("input", false);
+    }
   },
 };
 </script>

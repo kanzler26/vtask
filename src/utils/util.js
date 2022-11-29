@@ -22,6 +22,6 @@ const headers = [
     },
 ]
 
-export default {
+export {
     groups, headers
 }
